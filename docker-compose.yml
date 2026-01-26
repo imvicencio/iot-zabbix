@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  zabbix-bridge:
+    build: .
+    container_name: emqx_zabbix_bridge
+    restart: always
+    environment:
+      - MQTT_BROKER=host.docker.internal # Or your broker IP
+      - MQTT_PORT=1883
+      - MQTT_TOPIC=iot/sensors/+
+      - ZABBIX_SERVER=host.docker.internal # Or Zabbix IP
+      - ZABBIX_PORT=10051
+      - ZABBIX_HOST_NAME=IoT_Gateway
+      # Optional PSK Security (requires code update to use)
+      # - ZABBIX_PSK_IDENTITY=my_bridge_id
+      # - ZABBIX_PSK_KEY=00000000000000000000000000000000
+    volumes:
+      - ./devices.json:/app/devices.json # Mount config so you can change mappings without rebuild
+    # Network mode host is easiest for local testing, but bridge is better for production
+    # network_mode: host 
