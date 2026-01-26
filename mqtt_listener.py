@@ -7,6 +7,10 @@ from zabbix_sender import ZabbixProducer
 class MQTTListener:
     def __init__(self, devices_map):
         self.client = mqtt.Client(client_id=config.MQTT_CLIENT_ID) 
+        
+        if config.MQTT_USERNAME and config.MQTT_PASSWORD:
+            self.client.username_pw_set(config.MQTT_USERNAME, config.MQTT_PASSWORD)
+
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
         self.devices = devices_map
