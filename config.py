@@ -1,4 +1,7 @@
 import os
+import logging
+
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
 
 # MQTT Configuration
 MQTT_BROKER = os.getenv("MQTT_BROKER", "localhost")

@@ -48,6 +48,6 @@ class ZabbixProducer:
                 # self.sender.send(metrics) # Uncomment to actually send
                 # For safety in dev/demo without a real server, we might want to catch connection errors gently.
                 ret = self.sender.send(metrics)
-                logging.info(f"Zabbix Send Result: {ret}")
+                logging.info(f"Successfully exported {len(metrics)} metrics to Zabbix. Result: {ret}")
             except Exception as e:
                 logging.error(f"Failed to send metrics to Zabbix: {e}")

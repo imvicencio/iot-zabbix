@@ -26,7 +26,7 @@ class MQTTListener:
     def on_message(self, client, userdata, msg):
         try:
             payload_str = msg.payload.decode()
-            logging.debug(f"Received message on {msg.topic}: {payload_str}")
+            logging.info(f"Received message on {msg.topic}: {payload_str}")
             data = json.loads(payload_str)
             
             uuid = data.get("uuid")

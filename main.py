@@ -6,7 +6,7 @@ from mqtt_listener import MQTTListener
 
 # Setup Logging
 logging.basicConfig(
-    level=logging.INFO,
+    level=config.LOG_LEVEL,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(sys.stdout)
