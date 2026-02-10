@@ -22,10 +22,40 @@ The application is configured via environment variables. You can set these in th
 | `ZABBIX_SERVER` | IP address or hostname of the Zabbix Server. | `127.0.0.1` |
 | `ZABBIX_PORT` | Port of the Zabbix Trapper. | `10051` |
 | `ZABBIX_HOST_NAME` | Host name as configured in Zabbix. | `IoT_Gateway` |
+| `ZABBIX_PSK_IDENTITY` | Identity for PSK authentication. | `None` |
+| `ZABBIX_PSK_KEY` | Hexadecimal Key for PSK authentication. | `None` |
 
 ### Device Mapping (`devices.json`)
 
 The `devices.json` file maps MQTT topics or payload keys to Zabbix item keys. Ensure this file is mounted or present in the working directory.
+
+## Zabbix Configuration
+
+To receive data, you must configure Zabbix with a Host and Items that match the data being sent.
+
+### 1. Create a Host
+- **Host Name**: Must match the `ZABBIX_HOST_NAME` environment variable (Default: `IoT_Gateway`).
+- **Interfaces**: Add an Agent interface with IP `127.0.0.1` and Port `10051`. (Note: Zabbix Sender doesn't strictly use this, but the host needs an interface).
+- **Encryption**: If you are not using PSK, set "Connections from host" to "No encryption".
+
+### 2. Create Items
+You need to create **Zabbix Trapper** items for each metric you want to monitor.
+
+- **Type**: `Zabbix trapper`
+- **Key Format**: `{metric_name}.piso{piso}.sala.{sala}.{uuid_suffix}`
+    - `metric_name`: The key in the JSON payload (e.g., `temperature`, `humidity`).
+    - `piso`: Floor number from `devices.json`.
+    - `sala`: Room number from `devices.json`.
+    - `uuid_suffix`: The last segment of the device UUID (after the last dash).
+
+**Example**:
+For a device in `devices.json`:
+```json
+"550e8400-e29b-41d4-a716-446655440000": { "piso": "1", "sala": "101" }
+```
+And a payload `{"temperature": 25.5, "uuid": "..."}`:
+- **Key**: `temperature.piso1.sala.101.446655440000`
+- **Type of information**: Numeric (float)
 
 ## Execution Instructions
 
